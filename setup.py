@@ -9,7 +9,7 @@ env = os.environ.get('source')
 
 
 def get_dependencies():
-    dependency = []
+    dependency = ["click==8.2.1", "terminaltables==3.1.10"]
 
     if env and env == "code":
         return dependency
