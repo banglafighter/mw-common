@@ -4,3 +4,4 @@ from .pw_util import MwUtil
 from .object.sdlize import SDLize
 from .mw_const import HTTPStatusCode
 from .mw_data_util import DataUtil
+from .mw_console_log import Console
