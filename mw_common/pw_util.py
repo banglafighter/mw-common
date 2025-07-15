@@ -3,6 +3,7 @@ import random
 import string
 import sys
 import uuid
+from urllib.request import pathname2url
 from mw_common.mw_exception import MwException
 
 
@@ -92,3 +93,7 @@ class MwUtil:
         if raise_exception:
             raise MwException(message=message)
         return False
+
+    @staticmethod
+    def path2url(file_path):
+        return pathname2url(file_path)
