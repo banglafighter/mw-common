@@ -1,4 +1,5 @@
-from datetime import datetime
+from datetime import datetime, date
+import time
 
 
 class DateUtil:
@@ -32,3 +33,20 @@ class DateUtil:
             string_date = cls.format_today(date_format=date_format)
         starting_datetime = f"{string_date} 23:59:59"
         return cls.string_to_datetime(string_date=starting_datetime, date_format=f"{date_format} %H:%M:%S")
+
+    @classmethod
+    def get_weekday(cls):
+        today = date.today()
+        return today.strftime("%A")
+
+    @classmethod
+    def get_db_datetime(cls):
+        return datetime.now()
+
+    @classmethod
+    def get_db_date(cls):
+        return date.today()
+
+    @classmethod
+    def get_timestamp(cls):
+        return int(time.time() * 1000)
