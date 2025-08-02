@@ -8,3 +8,4 @@ from .mw_console_log import Console
 from .mw_date_util import DateUtil
 from .mw_converter import DataCastType
 from .mw_converter import MwConverter
+from .mw_exception import MwException

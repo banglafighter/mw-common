@@ -43,3 +43,19 @@ class DataUtil:
             return json.loads(json_string)
         except Exception as e:
             return default
+
+    @classmethod
+    def copy_common_attrs(cls, source, target):
+        for attr in dir(target):
+            if attr.startswith('_'):
+                continue
+            if not hasattr(source, attr):
+                continue
+            if callable(getattr(source, attr)):
+                continue
+            try:
+                setattr(target, attr, getattr(source, attr))
+            except (AttributeError, TypeError):
+                pass
+        return target
+
