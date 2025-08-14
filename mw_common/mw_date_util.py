@@ -50,3 +50,9 @@ class DateUtil:
     @classmethod
     def get_timestamp(cls):
         return int(time.time() * 1000)
+
+    @classmethod
+    def get_days(cls, date_data: date, current_data: date = None):
+        if not current_data:
+            current_data = date.today()
+        return (current_data - date_data).days
