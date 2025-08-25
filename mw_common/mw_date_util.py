@@ -1,5 +1,6 @@
 from datetime import datetime, date
 import time
+from .mw_common_data import DateData
 
 
 class DateUtil:
@@ -50,6 +51,23 @@ class DateUtil:
     @classmethod
     def get_timestamp(cls):
         return int(time.time() * 1000)
+
+    @classmethod
+    def get_date_components(cls, input_date: date = None) -> DateData:
+        if not input_date:
+            input_date = date.today()
+        date_data = DateData(
+            year=input_date.year,
+            month=input_date.month,
+            yearShort=int(input_date.strftime("%y")),
+            monthName=input_date.strftime("%B"),
+            monthShort=input_date.strftime("%b"),
+            day=input_date.day,
+            weekday=input_date.strftime("%A"),
+            dayOfYear=input_date.strftime("%j"),
+            weekOfYear=input_date.strftime("%W")
+        )
+        return date_data
 
     @classmethod
     def get_days(cls, date_data: date, current_data: date = None):

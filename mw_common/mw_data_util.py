@@ -59,3 +59,10 @@ class DataUtil:
                 pass
         return target
 
+    @classmethod
+    def get_object_fields(cls, data_object: object):
+        fields = []
+        for field in dir(data_object):
+            if not field.startswith('__'):
+                fields.append(field)
+        return fields
