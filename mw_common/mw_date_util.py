@@ -17,6 +17,13 @@ class DateUtil:
         return None
 
     @classmethod
+    def string_to_date(cls, string_date: str, date_format: str = "%d/%m/%Y"):
+        date_time_data = cls.string_to_datetime(string_date, date_format)
+        if date_time_data:
+            return date_time_data.date()
+        return None
+
+    @classmethod
     def format_today(cls, date_format: str = "%d/%m/%Y"):
         today = datetime.today()
         return today.strftime(date_format)
