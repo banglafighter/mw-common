@@ -1,4 +1,6 @@
 import dataclasses
+import json
+from collections import OrderedDict
 from enum import Enum
 import re
 from types import GenericAlias
@@ -86,7 +88,7 @@ class SDLize(object):
         return cls._load_data_class(cls, data=data)
 
     def _dict_factory(self, fields):
-        dict_field = {}
+        dict_field = OrderedDict()
         property_modifier = self._get_property_modifier()
         for (key, value) in fields:
             if property_modifier and (not self._exclude_props_mod or key not in self._exclude_props_mod):
@@ -99,6 +101,10 @@ class SDLize(object):
         self._include_null = include_null
         self.set_serialize_conf()
         return dataclasses.asdict(self, dict_factory=self._dict_factory)
+
+    def to_json(self, include_null=False):
+        data = self.to_dict(include_null=include_null)
+        return json.dumps(data)
 
     def set_serialize_conf(self):
         pass
