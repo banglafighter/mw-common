@@ -1,3 +1,4 @@
+import calendar
 from datetime import datetime, date
 import time
 from .mw_common_data import DateData
@@ -41,6 +42,19 @@ class DateUtil:
             string_date = cls.format_today(date_format=date_format)
         starting_datetime = f"{string_date} 23:59:59"
         return cls.string_to_datetime(string_date=starting_datetime, date_format=f"{date_format} %H:%M:%S")
+
+    @classmethod
+    def start_of_month(cls, date_object: date = None) -> date:
+        if not date_object:
+            date_object = date.today()
+        return date(date_object.year, date_object.month, 1)
+
+    @classmethod
+    def end_of_month(cls, date_object: date = None) -> date:
+        if not date_object:
+            date_object = date.today()
+        last_day = calendar.monthrange(date_object.year, date_object.month)[1]
+        return date(date_object.year, date_object.month, last_day)
 
     @classmethod
     def get_weekday(cls):
