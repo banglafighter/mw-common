@@ -1,7 +1,8 @@
 import calendar
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 import time
 from .mw_common_data import DateData
+from .mw_exception import MwException
 
 
 class DateUtil:
@@ -9,6 +10,12 @@ class DateUtil:
     @classmethod
     def format_date(cls, date_data, date_format: str = "%d/%m/%Y"):
         return date_data.strftime(date_format)
+
+    @classmethod
+    def format_datetime(cls, datetime_data: datetime, datetime_format: str = "%d/%m/%Y %H:%M:%S") -> str:
+        if datetime_data is None:
+            raise MwException("datetime_data cannot be None")
+        return datetime_data.strftime(datetime_format)
 
     @classmethod
     def string_to_datetime(cls, string_date: str, date_format: str = "%d/%m/%Y %H:%M:%S"):
@@ -30,17 +37,38 @@ class DateUtil:
         return today.strftime(date_format)
 
     @classmethod
-    def start_of_day(cls, string_date: str = None, date_format: str = "%d/%m/%Y"):
+    def start_of_day(cls, string_date: str | date | datetime = None, date_format: str = "%d/%m/%Y", send_string: bool = False):
         if not string_date:
             string_date = cls.format_today(date_format=date_format)
+
+        if isinstance(string_date, date):
+            string_date = cls.format_date(string_date, date_format=date_format)
+
+        if isinstance(string_date, datetime):
+            string_date = cls.format_datetime(string_date, datetime_format=date_format)
+
         starting_datetime = f"{string_date} 00:00:00"
+
+        if send_string:
+            return starting_datetime
+
         return cls.string_to_datetime(string_date=starting_datetime, date_format=f"{date_format} %H:%M:%S")
 
     @classmethod
-    def end_of_day(cls, string_date: str = None, date_format: str = "%d/%m/%Y"):
+    def end_of_day(cls, string_date: str | date | datetime = None, date_format: str = "%d/%m/%Y", send_string: bool = False):
         if not string_date:
             string_date = cls.format_today(date_format=date_format)
+
+        if isinstance(string_date, date):
+            string_date = cls.format_date(string_date, date_format=date_format)
+
+        if isinstance(string_date, datetime):
+            string_date = cls.format_datetime(string_date, datetime_format=date_format)
+
         starting_datetime = f"{string_date} 23:59:59"
+
+        if send_string:
+            return starting_datetime
         return cls.string_to_datetime(string_date=starting_datetime, date_format=f"{date_format} %H:%M:%S")
 
     @classmethod
@@ -91,7 +119,20 @@ class DateUtil:
         return date_data
 
     @classmethod
-    def get_days(cls, date_data: date, current_data: date = None):
-        if not current_data:
-            current_data = date.today()
-        return (current_data - date_data).days
+    def get_days(cls, to_date: date | datetime, from_date: date | datetime | None = None):
+        if to_date is None:
+            raise MwException("to_date cannot be None")
+
+        if isinstance(to_date, datetime):
+            to_date = to_date.date()
+        if from_date is None:
+            from_date = date.today()
+        elif isinstance(from_date, datetime):
+            from_date = from_date.date()
+        return (from_date - to_date).days
+
+    @classmethod
+    def add_days(cls, base_date: date | datetime, days: int) -> date | datetime:
+        if base_date is None:
+            raise MwException("base_date cannot be None")
+        return base_date + timedelta(days=days)
