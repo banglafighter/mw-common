@@ -4,7 +4,7 @@ import json
 class DataUtil:
 
     @staticmethod
-    def dict_value(data: dict, key: str, default=None):
+    def dict_value(data: dict, key, default=None):
         if not data or not key:
             return default
         elif key in data:
