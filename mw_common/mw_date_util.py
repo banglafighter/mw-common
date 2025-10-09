@@ -136,3 +136,11 @@ class DateUtil:
         if base_date is None:
             raise MwException("base_date cannot be None")
         return base_date + timedelta(days=days)
+
+    @classmethod
+    def subtract_days(cls, base_date: date | datetime, days: int) -> date | datetime:
+        return cls.add_days(base_date, -days)
+
+    @classmethod
+    def today(cls):
+        return date.today()
