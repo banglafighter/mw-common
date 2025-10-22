@@ -144,3 +144,19 @@ class DateUtil:
     @classmethod
     def today(cls):
         return date.today()
+
+    @classmethod
+    def current_year(cls):
+        return datetime.now().year
+
+    @classmethod
+    def start_date_time_of_year(cls, year: int = None) -> datetime:
+        if not year:
+            year = cls.current_year()
+        return datetime(year, 1, 1)
+
+    @classmethod
+    def end_date_time_of_year(cls, year: int = None) -> datetime:
+        if not year:
+            year = cls.current_year()
+        return datetime(year, 12, 31, 23, 59, 59)
