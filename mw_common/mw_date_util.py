@@ -150,6 +150,14 @@ class DateUtil:
         return datetime.now().year
 
     @classmethod
+    def current_month(cls):
+        return datetime.now().month
+
+    @classmethod
+    def current_day(cls):
+        return datetime.now().day
+
+    @classmethod
     def start_date_time_of_year(cls, year: int = None) -> datetime:
         if not year:
             year = cls.current_year()
