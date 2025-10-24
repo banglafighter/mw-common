@@ -94,7 +94,7 @@ class DateUtil:
         return datetime.now()
 
     @classmethod
-    def get_db_date(cls):
+    def get_db_date(cls) -> date:
         return date.today()
 
     @classmethod
@@ -142,8 +142,12 @@ class DateUtil:
         return cls.add_days(base_date, -days)
 
     @classmethod
-    def today(cls):
+    def today(cls) -> date:
         return date.today()
+
+    @classmethod
+    def today_datetime(cls) -> datetime:
+        return datetime.now()
 
     @classmethod
     def current_year(cls):
