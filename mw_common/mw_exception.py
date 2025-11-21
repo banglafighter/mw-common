@@ -3,7 +3,7 @@ class MwException(Exception):
     message = None
     additionalInfo: dict = None
     code: str = None
-    data: any = None
+    data: dict | list | str | None = None
 
     def __init__(self, message=None, exception_type: str = None):
         super().__init__(message)
@@ -22,6 +22,6 @@ class MwException(Exception):
             self.additionalInfo[key] = value
         return self
 
-    def add_data(self, data: any):
+    def add_data(self, data: dict | list | str):
         self.data = data
         return self
