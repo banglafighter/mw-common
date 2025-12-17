@@ -3,6 +3,7 @@ from datetime import datetime, date, timedelta
 import time
 from .mw_common_data import DateData
 from .mw_exception import MwException
+from .nested.iso_date_time import ISO8601Time
 
 
 class DateUtil:
@@ -172,3 +173,69 @@ class DateUtil:
         if not year:
             year = cls.current_year()
         return datetime(year, 12, 31, 23, 59, 59)
+
+    @classmethod
+    def iso_8601(cls, duration: str) -> ISO8601Time:
+        return ISO8601Time(duration=duration)
+
+    @classmethod
+    def get_duration(cls, previous: datetime, current: datetime = None, *, formatted: bool = True, show_minutes: bool = True, show_seconds: bool = True, day: str = None, hour: str = None, minute: str = None, second: str = None) -> str | dict:
+        DEFAULT_LABELS = {
+            "day": ("day", "days"),
+            "hour": ("hour", "hours"),
+            "minute": ("minute", "minutes"),
+            "second": ("second", "seconds"),
+        }
+
+        if previous is None:
+            raise MwException("previous datetime is required")
+
+        if current is None:
+            current = datetime.now(tz=previous.tzinfo)
+
+        if current < previous:
+            raise MwException("current must be after previous")
+
+        delta = current - previous
+        total_seconds = int(delta.total_seconds())
+
+        days = total_seconds // 86400
+        remainder = total_seconds % 86400
+
+        hours = remainder // 3600
+        remainder %= 3600
+
+        minutes = remainder // 60
+        seconds = remainder % 60
+
+        data = {
+            "days": days,
+            "hours": hours,
+            "minutes": minutes,
+            "seconds": seconds,
+            "total_minutes": total_seconds // 60,
+            "total_seconds": total_seconds,
+        }
+
+        if not formatted:
+            return data
+
+        def label(value: int, unit: str, override: str) -> str:
+            if override:
+                return f"{value}{override}"
+            singular, plural = DEFAULT_LABELS[unit]
+            name = singular if value == 1 else plural
+            return f"{value} {name}"
+
+        parts = []
+
+        if days:
+            parts.append(label(days, "day", day))
+        if hours:
+            parts.append(label(hours, "hour", hour))
+        if show_minutes and minutes:
+            parts.append(label(minutes, "minute", minute))
+        if show_seconds and seconds:
+            parts.append(label(seconds, "second", second))
+
+        return " ".join(parts) if parts else ""
