@@ -26,6 +26,13 @@ class DateUtil:
         return None
 
     @classmethod
+    def iso_string_to_datetime(cls, string_date: str):
+        date_time_data = datetime.fromisoformat(string_date)
+        if date_time_data:
+            return date_time_data
+        return None
+
+    @classmethod
     def string_to_date(cls, string_date: str, date_format: str = "%d/%m/%Y"):
         date_time_data = cls.string_to_datetime(string_date, date_format)
         if date_time_data:
