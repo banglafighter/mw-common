@@ -146,6 +146,12 @@ class DateUtil:
         return base_date + timedelta(days=days)
 
     @classmethod
+    def add_time(cls, base_date: date | datetime, hours: int = 0, minutes: int = 0, seconds: int = 0) -> date | datetime:
+        if base_date is None:
+            raise MwException("base_date cannot be None")
+        return base_date + timedelta(hours=hours, minutes=minutes, seconds=seconds)
+
+    @classmethod
     def subtract_days(cls, base_date: date | datetime, days: int) -> date | datetime:
         return cls.add_days(base_date, -days)
 
