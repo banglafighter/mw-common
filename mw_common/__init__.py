@@ -10,3 +10,4 @@ from .mw_converter import DataCastType
 from .mw_converter import MwConverter
 from .mw_exception import MwException
 from .mw_common_data import DateData
+from .mw_cli_base import MWebCLIGroup
