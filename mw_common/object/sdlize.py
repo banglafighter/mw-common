@@ -3,7 +3,7 @@ import json
 from collections import OrderedDict
 from enum import Enum
 import re
-from types import GenericAlias
+from typing import get_origin, get_args
 
 
 class PropsModType(Enum):
@@ -45,42 +45,54 @@ class SDLize(object):
         kwargs = cls._get_load_kwargs(cls, data=data)
         return cls(**kwargs)
 
-    def _get_collection_args(self, object_class, index):
-        if hasattr(object_class, "__args__") and len(getattr(object_class, "__args__")) > index:
-            return getattr(object_class, "__args__")[index]
-        return None
-
-    def _load_generic_alias_dict_data(cls, field_type, values):
-        generic_class_name = cls._get_collection_args(cls, field_type, 1)
-        object_dict = {}
-        for name, value in values.items():
-            object_dict[name] = cls._load_data_class(generic_class_name, data=value)
-        return object_dict
-
-    def _load_generic_alias_list_data(cls, field_type, values):
-        generic_class_name = cls._get_collection_args(cls, field_type, 0)
-        object_list = []
-        for value in values:
-            object_list.append(cls._load_data_class(generic_class_name, data=value))
-        return object_list
-
     def _get_load_kwargs(cls, data: dict):
         property_modifier = cls._get_property_modifier(cls)
         field_name_type = {field.name: field.type for field in dataclasses.fields(cls)}
         kwargs = {}
+
         for key, value in data.items():
             if property_modifier and (not cls._exclude_props_mod or key not in cls._exclude_props_mod):
                 key = property_modifier(cls, text=key)
-            if key in field_name_type:
-                field_type = field_name_type[key]
-                if isinstance(value, list) and isinstance(field_type, GenericAlias):
-                    kwargs[key] = cls._load_generic_alias_list_data(cls, field_type=field_type, values=value)
-                elif isinstance(value, dict) and isinstance(field_type, GenericAlias):
-                    kwargs[key] = cls._load_generic_alias_dict_data(cls, field_type=field_type, values=value)
-                elif isinstance(value, dict) and issubclass(field_type, SDLize):
-                    kwargs[key] = cls._load_data_class(field_type, data=value)
+
+            if key not in field_name_type:
+                continue
+
+            field_type = field_name_type[key]
+            origin = get_origin(field_type)
+
+            # list[...] or List[...]
+            if isinstance(value, list) and origin is list:
+                item_type = get_args(field_type)[0]
+                if dataclasses.is_dataclass(item_type):
+                    kwargs[key] = [
+                        cls._load_data_class(item_type, item)
+                        for item in value
+                    ]
                 else:
                     kwargs[key] = value
+
+            # dict[...] or Dict[...]
+            elif isinstance(value, dict) and origin is dict:
+                _, value_type = get_args(field_type)
+                if dataclasses.is_dataclass(value_type):
+                    kwargs[key] = {
+                        k: cls._load_data_class(value_type, v)
+                        for k, v in value.items()
+                    }
+                else:
+                    kwargs[key] = value
+
+            # Nested SDLize object
+            elif (
+                    isinstance(value, dict)
+                    and isinstance(field_type, type)
+                    and issubclass(field_type, SDLize)
+            ):
+                kwargs[key] = cls._load_data_class(field_type, value)
+
+            else:
+                kwargs[key] = value
+
         return kwargs
 
     @classmethod
