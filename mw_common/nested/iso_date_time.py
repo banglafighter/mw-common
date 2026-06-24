@@ -12,7 +12,7 @@ class ISO8601Time:
         r'(?:T'
         r'(?:(\d+)H)?'
         r'(?:(\d+)M)?'
-        r'(?:(\d+)S)?'
+        r'(?:(\d+(?:\.\d+)?)S)?'
         r')?$'
     )
 
@@ -22,7 +22,7 @@ class ISO8601Time:
     days: int = 0
     hours: int = 0
     minutes: int = 0
-    seconds: int = 0
+    seconds: float = 0.0
 
     def __init__(self, duration: str):
         if not isinstance(duration, str):
@@ -43,7 +43,7 @@ class ISO8601Time:
         self.days = int(days) if days else 0
         self.hours = int(hours) if hours else 0
         self.minutes = int(minutes) if minutes else 0
-        self.seconds = int(seconds) if seconds else 0
+        self.seconds = float(seconds) if seconds else 0.0
 
     def human_readable(self, hour: str = None, minute: str = None, second: str = None) -> str:
         parts = []
@@ -66,10 +66,11 @@ class ISO8601Time:
             parts.append(f"{self.minutes}{label}")
 
         if self.seconds:
-            label = f" second{'s' if self.seconds > 1 else ''}"
+            display_seconds = int(self.seconds) if self.seconds.is_integer() else self.seconds
+            label = f" second{'s' if display_seconds > 1 else ''}"
             if second:
                 label = second
-            parts.append(f"{self.seconds}{label}")
+            parts.append(f"{display_seconds}{label}")
 
         return " ".join(parts) if parts else ""
 
@@ -86,7 +87,7 @@ class ISO8601Time:
 
         return total
 
-    def second(self) -> int:
+    def second(self) -> float:
         if self.years or self.months:
             raise MwException("Years and months cannot be safely converted to seconds")
 
