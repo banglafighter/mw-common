@@ -3,6 +3,7 @@ import random
 import string
 import sys
 import uuid
+from datetime import datetime
 from urllib.request import pathname2url
 from mw_common.mw_exception import MwException
 
@@ -97,3 +98,8 @@ class MwUtil:
     @staticmethod
     def path2url(file_path):
         return pathname2url(file_path)
+
+    @classmethod
+    def fsp(cls):  # File Store Path
+        now = datetime.now()
+        return f"{now:%Y}/{now:%m}/{now:%d}/{uuid.uuid4().hex[:2]}"
