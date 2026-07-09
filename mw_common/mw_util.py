@@ -17,6 +17,17 @@ class MwUtil:
         return unique_id
 
     @staticmethod
+    def uuid7(is_upper: bool = False, is_str: bool = False):
+        unique_id = uuid.uuid7()
+        if is_upper:
+            return str(unique_id).upper()
+
+        if is_str:
+            return str(unique_id)
+
+        return unique_id
+
+    @staticmethod
     def get_random(length=12) -> str:
         unique_id = MwUtil.uuid()
         unique_id = unique_id.replace("-", "")
