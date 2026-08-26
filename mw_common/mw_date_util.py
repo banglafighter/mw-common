@@ -1,12 +1,18 @@
 import calendar
-from datetime import datetime, date, timedelta
-import time
+import time as time_module
+from datetime import datetime, date, timedelta, time
 from .mw_common_data import DateData
 from .mw_exception import MwException
 from .nested.iso_date_time import ISO8601Time
 
 
 class DateUtil:
+
+    @classmethod
+    def format_time(cls, time_data: time, date_format: str = "%H:%M:%S"):
+        if time_data is None:
+            raise MwException("time_data cannot be None")
+        return time_data.strftime(date_format)
 
     @classmethod
     def format_date(cls, date_data, date_format: str = "%d/%m/%Y"):
@@ -107,7 +113,7 @@ class DateUtil:
 
     @classmethod
     def get_timestamp(cls):
-        return int(time.time() * 1000)
+        return int(time_module.time() * 1000)
 
     @classmethod
     def get_date_components(cls, input_date: date = None) -> DateData:
@@ -180,6 +186,10 @@ class DateUtil:
     @classmethod
     def current_day(cls):
         return datetime.now().day
+
+    @classmethod
+    def current_time(cls):
+        return datetime.now().time()
 
     @classmethod
     def start_date_time_of_year(cls, year: int = None) -> datetime:
