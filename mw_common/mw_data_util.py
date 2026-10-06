@@ -3,6 +3,10 @@ import json
 
 class DataUtil:
 
+    @classmethod
+    def is_empty_dict(cls, data: dict | None) -> bool:
+        return not data
+
     @staticmethod
     def dict_value(data: dict, key, default=None):
         if not data or not key:
