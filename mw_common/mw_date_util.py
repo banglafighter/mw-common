@@ -272,3 +272,89 @@ class DateUtil:
             parts.append(label(seconds, "second", second))
 
         return " ".join(parts) if parts else ""
+
+
+# Python datetime format codes:
+#
+# Date:
+# %d = Day of month, zero-padded (01-31)
+# %e = Day of month, space-padded (platform dependent)
+# %j = Day of year (001-366)
+# %a = Abbreviated weekday name (Mon, Tue, Wed)
+# %A = Full weekday name (Monday, Tuesday)
+# %w = Weekday number (0=Sunday, 6=Saturday)
+# %u = ISO weekday number (1=Monday, 7=Sunday)
+#
+# %m = Month number, zero-padded (01-12)
+# %b = Abbreviated month name (Jan, Feb, Mar)
+# %B = Full month name (January, February)
+#
+# %y = Year without century (00-99)
+# %Y = Year with century (e.g. 2026)
+#
+# Week:
+# %U = Week number, Sunday as first day (00-53)
+# %W = Week number, Monday as first day (00-53)
+# %V = ISO week number (01-53)
+# %G = ISO year
+#
+# Time:
+# %H = Hour, 24-hour format (00-23)
+# %I = Hour, 12-hour format (01-12)
+# %M = Minute (00-59)
+# %S = Second (00-59)
+# %f = Microsecond (000000-999999)
+# %p = AM / PM
+#
+# Timezone:
+# %z = UTC offset (e.g. +0600)
+# %Z = Timezone name
+#
+# Combined:
+# %c = Locale date and time representation
+# %x = Locale date representation
+# %X = Locale time representation
+#
+# Literal:
+# %% = Percent sign (%)
+#
+# Common formats:
+#
+# "%d/%m/%Y"
+# 07/10/2026
+#
+# "%d-%m-%Y"
+# 07-10-2026
+#
+# "%Y-%m-%d"
+# 2026-10-07
+#
+# "%d %B %Y"
+# 07 October 2026
+#
+# "%d %b %Y"
+# 07 Oct 2026
+#
+# "%A, %d %B %Y"
+# Wednesday, 07 October 2026
+#
+# "%H:%M"
+# 20:39
+#
+# "%H:%M:%S"
+# 20:39:30
+#
+# "%I:%M %p"
+# 08:39 PM
+#
+# "%d/%m/%Y %H:%M:%S"
+# 07/10/2026 20:39:30
+#
+# "%Y-%m-%d %H:%M:%S"
+# 2026-10-07 20:39:30
+#
+# "%Y-%m-%dT%H:%M:%S"
+# 2026-10-07T20:39:30
+#
+# "%Y-%m-%dT%H:%M:%S%z"
+# 2026-10-07T20:39:30+0600
