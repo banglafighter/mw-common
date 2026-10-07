@@ -116,6 +116,10 @@ class DateUtil:
         return int(time_module.time() * 1000)
 
     @classmethod
+    def create_date(cls, day: int, month: int, year: int) -> date:
+        return date(year, month, day)
+
+    @classmethod
     def get_date_components(cls, input_date: date = None) -> DateData:
         if not input_date:
             input_date = date.today()
